@@ -11,8 +11,7 @@ jobs:
     steps:
       - name: Pull Latest Changes and Recreate Containers
         run: |
-          git config --global --add safe.directory /volume1/docker/Face-Recognition-Alarm-System
-          cd /volume1/docker/Face-Recognition-Alarm-System
+          git config --global --add safe.directory /volume1/docker/face-recognition-alarm-system
+          cd /volume1/docker/face-recognition-alarm-system
           git pull origin main
           docker compose up -d --remove-orphans
-

@@ -6,9 +6,9 @@ mqtt:
 go2rtc:
   streams:
     tapo_main:
-      - rtsp://{CAMERA_USER}:{CAMERA_PASSWORD}@{CAMERA_IP}:554/stream1 # 2K QHD (4MP) main stream
+      - rtsp://{CAMERA_USER}:{CAMERA_PASSWORD}@{CAMERA_IP}:554/stream1 # Main stream.
     tapo_sub:
-      - rtsp://{CAMERA_USER}:{CAMERA_PASSWORD}@{CAMERA_IP}:554/stream2 # Low resolution sub stream
+      - rtsp://{CAMERA_USER}:{CAMERA_PASSWORD}@{CAMERA_IP}:554/stream2 # Sub stream.
 
 cameras:
   main_door:
@@ -22,6 +22,7 @@ cameras:
           roles:
             - detect
     detect:
+      enabled: False  # Standby: activated dynamically via MQTT
       width: 640
       height: 360
       fps: 5

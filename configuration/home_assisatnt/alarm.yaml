@@ -1,0 +1,65 @@
+alias: "alarm_life_cycle"
+description: "Gestisce il ciclo di risveglio Frigate e verifica intrusi/parenti"
+mode: restart
+trigger:
+  - platform: state
+    entity_id: binary_sensor.camera_ingresso_person_detected
+    to: "on"
+    id: "persona_rilevata"
+  - platform: state
+    entity_id: binary_sensor.camera_ingresso_person_detected
+    to: "off"
+    for: "00:00:20"
+    id: "nessuna_persona"
+
+condition:
+  - condition: state
+    entity_id: person.edo
+    state: "not_home"
+  - condition: state
+    entity_id: person.eli
+    state: "not_home"
+
+action:
+  - choose:
+      - conditions:
+          - condition: trigger
+            id: "persona_rilevata"
+        sequence:
+          - action: mqtt.publish
+            data:
+              topic: "frigate/main_door/detect/set"
+              payload: "ON"
+          - action: mqtt.publish
+            data:
+              topic: "frigate/main_door/recordings/set"
+              payload: "ON"
+          - wait_for_trigger:
+              - platform: mqtt
+                topic: "double-take/matches/#"
+            timeout: "00:00:15"
+            continue_on_timeout: true
+          - if:
+              - condition: template
+                value_template: >-
+                  {{ wait.trigger is not none and wait.trigger.topic != 'double-take/matches/unknown' }}
+            then:
+              - action: notify.notify
+                data:
+                  message: "🚨 Allarme: Persona autorizzata in giardino."
+            else:
+              - action: notify.notify
+                data:
+                  message: "🚨 Allarme: INTRUSO!"
+      - conditions:
+          - condition: trigger
+            id: "nessuna_persona"
+        sequence:
+          - action: mqtt.publish
+            data:
+              topic: "frigate/main_door/detect/set"
+              payload: "OFF"
+          - action: mqtt.publish
+            data:
+              topic: "frigate/main_door/recordings/set"
+              payload: "OFF"

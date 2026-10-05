@@ -6,6 +6,9 @@ mqtt:
 
 frigate:
   url: http://frigate:5000
+  attempts:
+    run: 15           # 15 rilevamenti per identificare la persona.
+    delay: 0.2       # Si analizza 1 frame ogni 200ms.
 
 detectors:
   compreface:

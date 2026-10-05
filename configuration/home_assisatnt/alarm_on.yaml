@@ -1,0 +1,30 @@
+alias: "allarme_on"
+description: "Accende la telecamera in standby quando nessuno è a casa"
+trigger:
+  - platform: state
+    entity_id:
+      - person.edo
+      - person.eli
+    to: "not_home"
+condition:
+  - condition: state
+    entity_id: person.edo
+    state: "not_home"
+  - condition: state
+    entity_id: person.eli
+    state: "not_home"
+action:
+  - action: switch.turn_on
+    target:
+      entity_id: switch.camera_ingresso
+  - action: mqtt.publish
+    data:
+      topic: "frigate/main_door/detect/set"
+      payload: "OFF"
+  - action: mqtt.publish
+    data:
+      topic: "frigate/main_door/recordings/set"
+      payload: "OFF"
+  - action: notify.notify
+    data:
+      message: "🚨 Allarme: ON."

@@ -1,6 +1,6 @@
 services:
   frigate:
-    container_name: FRAS-frigate
+    container_name: fras-frigate
     image: ghcr.io/blakeblackshear/frigate:stable
     shm_size: "128mb"
     devices:
@@ -23,10 +23,10 @@ services:
       - "8555:8555/udp"
     restart: unless-stopped
     networks:
-      - FRAS-network
+      - fras-network
 
   double-take:
-    container_name: FRAS-double-take
+    container_name: fras-double-take
     image: jakowenko/double-take:latest
     restart: unless-stopped
     environment:
@@ -43,10 +43,10 @@ services:
       - frigate
       - compreface-front-end
     networks:
-      - FRAS-network
+      - fras-network
 
   compreface-postgres-db:
-    container_name: FRAS-compreface-postgres-db
+    container_name: fras-compreface-postgres-db
     image: postgres:11.5
     environment:
       - POSTGRES_USER=${POSTGRES_USER:-compreface}
@@ -56,10 +56,10 @@ services:
       - ./compreface/postgres-data:/var/lib/postgresql/data
     restart: unless-stopped
     networks:
-      - FRAS-network
+      - fras-network
 
   compreface-admin:
-    container_name: FRAS-compreface-admin
+    container_name: fras-compreface-admin
     image: exadel/compreface-admin:latest
     restart: unless-stopped
     depends_on:
@@ -72,10 +72,10 @@ services:
       - SPRING_PROFILES_ACTIVE=dev
       - ENABLE_EMAIL_SERVER=false
     networks:
-      - FRAS-network
+      - fras-network
 
   compreface-api:
-    container_name: FRAS-compreface-api
+    container_name: fras-compreface-api
     image: exadel/compreface-api:latest
     restart: unless-stopped
     depends_on:
@@ -86,10 +86,10 @@ services:
       - POSTGRES_URL=jdbc:postgresql://compreface-postgres-db:5432/${POSTGRES_DB:-compreface}
       - SPRING_PROFILES_ACTIVE=dev
     networks:
-      - FRAS-network
+      - fras-network
 
   compreface-front-end:
-    container_name: FRAS-compreface-front-end
+    container_name: fras-compreface-front-end
     image: exadel/compreface-fe:latest
     restart: unless-stopped
     ports:
@@ -102,10 +102,10 @@ services:
       - PROXY_READ_TIMEOUT=60000ms
       - PROXY_CONNECT_TIMEOUT=10000ms
     networks:
-      - FRAS-network
+      - fras-network
 
   compreface-core:
-    container_name: FRAS-compreface-core
+    container_name: fras-compreface-core
     image: exadel/compreface-core:latest
     restart: unless-stopped
     environment:
@@ -113,8 +113,8 @@ services:
     ports:
       - "3001:3000"
     networks:
-      - FRAS-network
+      - fras-network
 
 networks:
-  FRAS-network:
+  fras-network:
     driver: bridge

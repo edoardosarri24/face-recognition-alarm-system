@@ -1,0 +1,23 @@
+alias: "allarme_off"
+description: "Spegne il rilevamento Frigate e la telecamera quando qualcuno è a casa"
+trigger:
+  - platform: state
+    entity_id:
+      - person.edo
+      - person.eli
+    to: "home"
+action:
+  - action: mqtt.publish
+    data:
+      topic: "frigate/main_door/detect/set"
+      payload: "OFF"
+  - action: mqtt.publish
+    data:
+      topic: "frigate/main_door/recordings/set"
+      payload: "OFF"
+  - action: switch.turn_off
+    target:
+      entity_id: switch.camera_ingresso
+  - action: notify.notify
+    data:
+      message: "🚨 Allarme: ON."

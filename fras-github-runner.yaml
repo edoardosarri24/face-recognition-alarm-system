@@ -1,0 +1,14 @@
+services:
+  github-runner:
+    container_name: fras-github-runner
+    image: myoung34/github-runner:latest
+    restart: unless-stopped
+    environment:
+      - REPO_URL=https://github.com/edoardosarri24/face-recognition-alarm-system
+      - RUNNER_TOKEN=<TOKEN-DI-REGISTRAZIONE>
+      - RUNNER_NAME=ugreen-nas-runner
+      - RUNNER_WORKDIR=/tmp/runner/work
+      - LABELS=self-hosted,nas
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /volume1/docker/face-recognition-alarm-system:/volume1/docker/face-recognition-alarm-system
