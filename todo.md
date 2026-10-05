@@ -1,3 +1,4 @@
 - in frigate devono esserci le zone corrette.
 - Settare rilevazione movomento e classificazione persone sulla telecamera.
 - salvataggio delle clip quando si rileva una persona.
+- immagine per il flow
